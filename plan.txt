@@ -1,0 +1,8 @@
+This is my plan for restarting the tic tac toe game
+
+What do I need?
+1. 
+ - A board object
+ - A tile object
+ - A game controller
+ - A screen updater / event listener

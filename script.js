@@ -45,7 +45,7 @@ function Board() {
         count++;
       }
     } 
-    document.querySelector('.playByPlay').innerHTML = `It is ${player.name}'s turn`;
+    document.querySelector('.playByPlay').innerHTML = `${player.name}'s turn`;
   }
 
   const selectTile = (player, r, c) => {
@@ -122,8 +122,9 @@ function Tile() {
 
 function GameController(pOneName = "X", pTwoName = "O") {
   let players = [
-    { name: pOneName, id: 1 },
-    { name: pTwoName, id: 2 }
+    { name: pOneName, id: 1, wins: 0 },
+    { name: pTwoName, id: 2, wins: 0 },
+    { name: "Draws", id: null, wins: 0 },
   ];
 
   let currentPlayer = players[0];
@@ -159,24 +160,39 @@ function GameController(pOneName = "X", pTwoName = "O") {
     } 
   };
 
+  const victory = (draw) => {
+    if (!draw) {
+      currentPlayer.wins++;
+    } else {
+      players[2].wins++;
+    }
+  };
+
   const gameOver = (res) => {
     board.printBoard(currentPlayer);
     document.querySelector('.control').setAttribute('disabled', 'True');
     // alert(`${currentPlayer.name} has been declared victorius!`);
     // console.log(`${currentPlayer.name} has been declared victorius!`);
     if (res==='win'){
-      document.querySelector('.playByPlay').innerHTML = `${currentPlayer.name} wins!!!!`  
+      document.querySelector('.playByPlay').innerHTML = `${currentPlayer.name} wins!!!!`;
+      victory(0);
     } else {
       document.querySelector('.playByPlay').innerHTML = 'Tie game!';
+      victory(1);
     }
     document.querySelector('.postOp').classList.remove('invisible');
     // Loser / person who didn't start this game starts the next game
+    updateScore();
     switchCurrentPlayer();
-    
   };
 
+  const updateScore = () => {
+    document.querySelector('.xScore').innerHTML = `${players[0].name}: ${players[0].wins}`; 
+    document.querySelector('.oScore').innerHTML = `${players[1].name}: ${players[1].wins}`;
+    document.querySelector('.drawScore').innerHTML = `${players[2].name}: ${players[2].wins}`;
+  };
 
-  return { playRound, setNames, printNewRound, resetBoard: board.resetBoard };
+  return { playRound, setNames, printNewRound, resetBoard: board.resetBoard, updateScore };
 }
 
 (function ScreenPlay() {
@@ -186,18 +202,24 @@ function GameController(pOneName = "X", pTwoName = "O") {
   const gameBoard = document.querySelector('.control');
   const options = document.querySelector('.options');
   const postOp = document.querySelector('.postOp');
+  const referee = document.querySelector('.referee');
 
   // Start game button
   options.querySelector('.startGame').addEventListener('click', () => {
     let xName = options.querySelector('#x').value !== '' ? options.querySelector('#x').value : 'X';
     let yName = options.querySelector('#o').value !== '' ? options.querySelector('#o').value : 'O';
+
+    options.querySelector('#x').value = '';
+    options.querySelector('#o').value = '';
+
     game.setNames(
       xName,
       yName
     );
+
     start();
   });
-
+  
 
   // Select tile
   const kiddos = gameBoard.children;
@@ -216,17 +238,26 @@ function GameController(pOneName = "X", pTwoName = "O") {
   // Quit
   postOp.querySelector('.restart').addEventListener('click', () => {
     game = GameController();
+
+    document.querySelector('.playByPlay').innerHTML = ''; 
     document.querySelector('.postOp').classList.add('invisible');
-    game.resetBoard();
+    gameBoard.classList.add('invisible');
+    referee.classList.add('invisible');
     options.classList.remove('invisible');
+
+    game.resetBoard();
+    game.updateScore();
   });
 
   const start = () => {
     gameBoard.removeAttribute('disabled');
-    // options.setAttribute('disabled', 'True');
+    gameBoard.classList.remove('invisible');
     options.classList.add('invisible');
+    referee.classList.remove('invisible');
+    
     game.resetBoard();
     game.printNewRound();
+    game.updateScore();
   }
 })();
 
