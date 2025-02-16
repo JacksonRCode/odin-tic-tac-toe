@@ -195,7 +195,7 @@ div.header {
   background-color: black;
   color: white;
   border: 1px solid white;
-  transform: scale(0.98);
+  transform: scale(1);
 }
 
 .postOp {
