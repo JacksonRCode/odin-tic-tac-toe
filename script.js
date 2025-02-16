@@ -3,12 +3,17 @@ function Board() {
   const rows = 3;
   const cols = 3;
   let board = [];
+  const kiddos = document.querySelector('.control').children;
 
   const resetBoard = () => {
+    board = [];
+    let count = 0
     for ( let i = 0 ; i < rows ; i++ ) {
       board[i] = [];
       for ( let j = 0 ; j < cols ; j++ ) {
         board[i][j] = Tile();
+        kiddos[count].innerHTML = '';
+        count++;
       }
     }
   }
@@ -26,7 +31,7 @@ function Board() {
 
     // ui  
     let count = 0;
-    const kiddos = document.querySelector('.control').children;
+    
     for ( let i = 0 ; i < rows ; i++ ) {
       for ( let j = 0 ; j < cols ; j++ ) {
         let v = board[i][j].getValue();
@@ -34,6 +39,8 @@ function Board() {
           kiddos[count].innerHTML = 'X';
         } else if (v===2) {
           kiddos[count].innerHTML = 'O';
+        } else {
+          kiddos[count].innerHTML = '';
         }
         count++;
       }
@@ -80,12 +87,13 @@ function Board() {
         }
         // console.log(`Checking? row: ${row}, col: ${col}, diag: ${diag}`);
         if (row === 3 || col[j] === 3 || diag[0] === 3 || diag[1] === 3) {
-          return 1;
+          return 'win';
         } else if (draw === 9) {
-          return 0;
+          return 'draw';
         }
       }
     }
+    return 0;
   }
 
   return { printBoard, selectTile, checkWin, resetBoard }
@@ -121,7 +129,6 @@ function GameController(pOneName = "X", pTwoName = "O") {
   let currentPlayer = players[0];
 
   const board = Board();
-  board.resetBoard();
 
   const setNames = (xName, oName) => {
     players[0].name = xName;
@@ -140,53 +147,55 @@ function GameController(pOneName = "X", pTwoName = "O") {
 
   const playRound = (r,c) => {
     if (board.selectTile(currentPlayer, r, c)) {
-      if (board.checkWin(currentPlayer)) {
-        console.log("here");
-        gameOver();
+      const res = board.checkWin(currentPlayer);
+      if (res) {
+        gameOver(res);
       } else {
         switchCurrentPlayer();
         printNewRound();
       }
     } else {
       console.log("That tile has already been selected");
-    }
-    
-    // win condition
-    
-      
+    } 
   };
 
-  const gameOver = () => {
+  const gameOver = (res) => {
     board.printBoard(currentPlayer);
     document.querySelector('.control').setAttribute('disabled', 'True');
     // alert(`${currentPlayer.name} has been declared victorius!`);
     // console.log(`${currentPlayer.name} has been declared victorius!`);
-    document.querySelector('.playByPlay').innerHTML = `${currentPlayer.name} wins!!!!`;
-
+    if (res==='win'){
+      document.querySelector('.playByPlay').innerHTML = `${currentPlayer.name} wins!!!!`  
+    } else {
+      document.querySelector('.playByPlay').innerHTML = 'Tie game!';
+    }
+    document.querySelector('.postOp').classList.remove('invisible');
+    // Loser / person who didn't start this game starts the next game
+    switchCurrentPlayer();
+    
   };
 
 
-  return { switchCurrentPlayer, getCurrentPlayer, playRound, setNames, printNewRound };
+  return { playRound, setNames, printNewRound, resetBoard: board.resetBoard };
 }
 
 (function ScreenPlay() {
-  const game = GameController();  
+  let game = GameController();  
   // game.board.resetBoard();
 
   const gameBoard = document.querySelector('.control');
   const options = document.querySelector('.options');
+  const postOp = document.querySelector('.postOp');
 
   // Start game button
   options.querySelector('.startGame').addEventListener('click', () => {
-    gameBoard.removeAttribute('disabled');
-    options.setAttribute('disabled', 'True');
-    options.classList.add('invisible');
-
+    let xName = options.querySelector('#x').value !== '' ? options.querySelector('#x').value : 'X';
+    let yName = options.querySelector('#o').value !== '' ? options.querySelector('#o').value : 'O';
     game.setNames(
-      options.querySelector('#x').value,
-      options.querySelector('#o').value
+      xName,
+      yName
     );
-    game.printNewRound();
+    start();
   });
 
 
@@ -198,7 +207,27 @@ function GameController(pOneName = "X", pTwoName = "O") {
     });
   }
 
+  // Play again
+  postOp.querySelector('.playAgain').addEventListener('click', () => {
+    document.querySelector('.postOp').classList.add('invisible');
+    start();
+  });
 
+  // Quit
+  postOp.querySelector('.restart').addEventListener('click', () => {
+    game = GameController();
+    document.querySelector('.postOp').classList.add('invisible');
+    game.resetBoard();
+    options.classList.remove('invisible');
+  });
+
+  const start = () => {
+    gameBoard.removeAttribute('disabled');
+    // options.setAttribute('disabled', 'True');
+    options.classList.add('invisible');
+    game.resetBoard();
+    game.printNewRound();
+  }
 })();
 
 
