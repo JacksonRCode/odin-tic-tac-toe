@@ -46,64 +46,113 @@ h1, h2, h3, h4, h5, h6 {
   isolation: isolate;
 }
 
-/* end of base styling */
+/* End of basic styling */
 
 body {
   height: 100vh;
-  width: 100vw;
-  display: grid;
-  grid-template-rows: 150px 1fr;
+
+  padding: 16px 32px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 2;
+}
+
+div.header {
+  align-self: start;
+  color: black;
+}
+
+div.gameboard {
+  /* height: 300px;
+  width: 300px; */
+
+  /* flex: 1; */
+
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: beige;
+  margin-top: 64px;
 }
 
-.header > h1 {
-  font-size: 3rem;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  justify-self: center;
-
-}
-
-.main {
-  align-self: start;
-}
-
-.gameboard {
+fieldset.control {
   display: grid;
-  grid-template-columns: repeat(3, 150px);
-  gap: 4px;
-  /* padding-top: 24px; */
+  grid-template-columns: repeat(3, 100px);
+  gap: 16px;
+
+  padding: 32px;
+
+  /* background-color: grey; */
+  border: none;
+  border-radius: 8px;
 }
 
-.tile {
-  width: 150px;
-  height: 150px;
+button.tile {
+  height: 100px;
+  background-color:blanchedalmond;
   border: 1px solid black;
-  background-color: white;
-  border-radius: 12px;
-  align-self: center;
-  justify-self: center;
-  
-  font-size: 80px;
-  font-family:'Courier New', Courier, monospace;
-  /* font-family:; */
-  font-weight: bold;
+  border-radius: 8px;
 }
 
-.tile:hover {
+.options {
+  width: 400px;
+  height: 200px;
+  position: absolute;
+  top: 40%;
+  background-color: whitesmoke;
+  border: 1px solid darkgrey;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.nameInputs {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.nameInputs > div {
+  flex: 0;
+}
+
+.getName {
+  padding: 2px 8px;
+  border: 1px solid black;
+  outline: none;
+}
+
+.getName:focus {
+  border: 1px solid darkgrey;
+  outline: none;
+}
+
+.startGame {
+  width: 200px;
+  height: 50px;
+  border-radius: 8px;
+  border: 1px solid black;
+  outline: none;
+  background-color: white;
+  color: black
+}
+
+.startGame:hover {
   background-color: whitesmoke;
 }
 
-.tile:active {
-  width: 148px;
-  height: 148px;
+.startGame:active {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
 }
 
-.x {
-  color: red;
-}
-
-.o {
-  color: blue;
+.invisible {
+  display: none;
 }

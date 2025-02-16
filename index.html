@@ -8,10 +8,10 @@
 </head>
 <body>
   <div class="header">
-    <h1>Tic Tac Toe</h1>
+    <h1>Tic-Tac-Toe</h1>
   </div>
-  <div class="main">
-    <div class="gameboard">
+  <div class="gameboard">
+    <fieldset class="control" disabled>
       <button class="tile"></button>
       <button class="tile"></button>
       <button class="tile"></button>
@@ -21,18 +21,27 @@
       <button class="tile"></button>
       <button class="tile"></button>
       <button class="tile"></button>
-      <!-- <div class="tile"></div>
-      <div class="tile"></div>
-      <div class="tile"></div>
-      <div class="tile"></div>
-      <div class="tile"></div>
-      <div class="tile"></div>
-      <div class="tile"></div>
-      <div class="tile"></div>
-      <div class="tile"></div> -->
+    </fieldset>
+    <fieldset class="options">
+      <div class="nameInputs">
+        <div>
+          <label for="x">Player X Name</label>
+          <input class="getName" type="text" name="x" id="x">
+        </div>
+        <div>
+          <label for="o">Player O Name</label>
+          <input class="getName" type="text" name="o" id="o">
+        </div>
+      </div>
+      <button class="startGame">Start Game</button>
+    </fieldset>
+    <p class="playByPlay"></p>
+    <div class="postOp invisible">
+      <button class="playAgain">Play Again</button>
+      <button class="restart">Quit</button>
     </div>
+    
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
